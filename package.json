@@ -1,0 +1,22 @@
+{
+  "name": "forum-mevn-server",
+  "version": "1.0.0",
+  "description": "Learn MEVN with vue 3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "forum",
+    "mongodb",
+    "vue.js",
+    "express.js",
+    "node.js",
+    "mongoose"
+  ],
+  "author": "fakhri-rossi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
