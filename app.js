@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import authRouter from './router/authRouter.js';
 
 dotenv.config();
 
@@ -26,6 +27,9 @@ app.get('/', (req, res) => {
         message: 'Message from entpoint!'
     });
 });
+
+// Parent Router
+app.use('/api/v1/auth', authRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://127.0.0.1:${PORT}`);
