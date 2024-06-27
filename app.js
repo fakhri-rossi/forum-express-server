@@ -3,13 +3,21 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import authRouter from './router/authRouter.js';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
 
 dotenv.config();
 
+// Middleware
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+if(process.env.NODE_DEV === "development"){
+    app.use(morgan('dev'));
+}
 
 // connect to DB
 mongoose.connect(process.env.DATABASE)
@@ -19,8 +27,6 @@ mongoose.connect(process.env.DATABASE)
         console.log('Err while connecting to DB', err);
     });
 
-// Middleware
-app.use(cors());
 
 
 // entpoint

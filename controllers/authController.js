@@ -1,4 +1,27 @@
 import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
+
+const signToken = id => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '6d'
+    });
+}
+
+const createSendToken = (user, statusCode, res) => {
+    const token = signToken(user._id);
+    const cookieOption = {
+        expire: new Date(
+            Date.now() + 6 * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true,
+        security: false
+    }
+    res.cookie('jwt', token, cookieOption);
+    user.password = undefined;
+    res.status(statusCode).json({
+        data: user
+    });
+}
 
 export const registerUser = async(req, res) => {
     try {
@@ -8,10 +31,7 @@ export const registerUser = async(req, res) => {
             password: req.body.password
         });
 
-        return res.status(201).json({
-            message: 'Register berhasil',
-            data: createUser
-        })
+        createSendToken(createUser, 201, res);
     } catch (error) {
         return res.status(400).json({
             message: 'error',
