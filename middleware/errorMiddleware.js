@@ -5,8 +5,7 @@ const notFound = (req, res, next) => {
 }
 
 const errorHandler = (err, req, res, next) => {
-    let statusCode = req.statusCode === 200 ? 500 : res.statusCode;
-
+    let statusCode = err.statusCode === 200 ? 500 : err.statusCode;
     let message = err.message;
 
     if(err.name === 'CastError' && err.kind === 'ObjectId'){

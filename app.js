@@ -5,7 +5,7 @@ import cors from 'cors';
 import authRouter from './router/authRouter.js';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import { notFound, errorHandler } from './middleware/errorHandler.js';
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
 
