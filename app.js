@@ -5,6 +5,7 @@ import cors from 'cors';
 import authRouter from './router/authRouter.js';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import { notFound, errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
 
@@ -38,6 +39,10 @@ app.get('/', (req, res) => {
 
 // Parent Router
 app.use('/api/v1/auth', authRouter);
+
+
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://127.0.0.1:${PORT}`);
