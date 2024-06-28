@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import asyncHandler from '../middleware/asyncHandler.js';
+import { ErrorHelper } from '../middleware/ErrorHelper.js';
 
 const signToken = id => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -40,8 +41,7 @@ export const registerUser = asyncHandler(async(req, res) => {
 export const loginUser = asyncHandler( async (req, res) => {
     // Validasi jika email/password ga diisi
     if(!req.body.email || !req.body.password){
-        res.status(400);
-        throw new Error(`Email dan password harus diisi!`);
+        throw new ErrorHelper(`Email dan password harus diisi!`, 400);
     }
 
     // Check jika email sudah didaftarkan
@@ -53,15 +53,24 @@ export const loginUser = asyncHandler( async (req, res) => {
         createSendToken(userData, 201, res);
 
     } else {
-        res.status(400);
-        throw new Error(`Invalid User`);
+        throw new ErrorHelper(`Invalid User`, 400);
     }
 })
 
 export const logoutUser = (req, res) => {
-    res.send('Logout berhasil!');
+    res.clearCookie('jwt');
+    res.status(200).json({
+        message: 'Cookie berhasil dihapus'
+    })
 }
 
-export const getUser = (req, res) => {
-    res.send('GetUser berhasil!');
+export const getUser = async(req, res) => {
+    const user = await User.findById(req.user.id).select({ password: false });
+    if(!user){
+        throw new ErrorHelper(`User not found`, 401);
+    } else {
+        return res.status(200).json({
+            user
+        })
+    }
 }

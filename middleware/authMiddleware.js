@@ -11,7 +11,7 @@ export const authMiddleware =  asyncHandler( async (req, res, next) => {
     }
 
     let decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
+
     try {
         decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -28,3 +28,18 @@ export const authMiddleware =  asyncHandler( async (req, res, next) => {
     return next();
 
 })
+
+export const permissionUser = (...roles) => {
+    // req.user.net
+    return (req, res, next) => {
+        if(!roles.includes(req.user.role)){
+            // throw new ErrorHelper(`Anda tidak bisa masuk ke halaman ini`, 403)
+            return next(
+                res.status(403).json({
+                    message: 'Anda tidak dapat mengakses halaman ini'
+                })
+            )
+        }
+        next();
+    }
+}
