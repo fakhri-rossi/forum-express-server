@@ -12,17 +12,22 @@ const signToken = id => {
 const createSendToken = (user, statusCode, res) => {
     const token = signToken(user._id);
     const cookieOption = {
-        expire: new Date(
+        expires: new Date(
             Date.now() + 6 * 24 * 60 * 60 * 1000
         ),
         httpOnly: true,
         security: false
     }
-    res.cookie('jwt', token, cookieOption);
     user.password = undefined;
-    res.status(statusCode).json({
-        data: user
+    
+    res.cookie('jwt', token, cookieOption);
+    res.status(statusCode)
+    .json({
+        data: user,
+        jwt: token,
+        cookieOption: cookieOption
     });
+
 }
 
 export const registerUser = asyncHandler(async(req, res) => {
@@ -49,11 +54,16 @@ export const loginUser = asyncHandler( async (req, res) => {
         email: req.body.email
     });
 
-    if(userData && (await userData.comparePassword(req.body.password))){
-        createSendToken(userData, 201, res);
+    if(userData){
+        if(await userData.comparePassword(req.body.password)){
+            createSendToken(userData, 201, res);
+
+        } else {
+            throw new ErrorHelper('Incorrect password', 401);
+        }
 
     } else {
-        throw new ErrorHelper(`Invalid User`, 400);
+        throw new ErrorHelper(`User not found`, 400);
     }
 })
 
