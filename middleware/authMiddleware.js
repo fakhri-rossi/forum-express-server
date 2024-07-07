@@ -5,12 +5,13 @@ import { ErrorHelper } from './ErrorHelper.js';
 
 export const authMiddleware =  asyncHandler( async (req, res, next) => {
     let token = req.cookies.jwt;
+    console.log(token)
 
     if(!token){
         throw new ErrorHelper(`Unauthorized: can't access the page, you aren't login yet`, 401)
     }
 
-    let decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
 
     try {
         decoded = jwt.verify(token, process.env.JWT_SECRET);

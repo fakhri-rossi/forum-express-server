@@ -79,7 +79,10 @@ export const getUser = async(req, res) => {
     if(!user){
         throw new ErrorHelper(`User not found`, 401);
     } else {
-        return res.status(200).json({
+        console.log('send user');
+        return res.status(200)
+        // .setHeader('Access-Control-Allow-Origin', 'http://localhost:3000/')
+        .json({
             user
         })
     }
