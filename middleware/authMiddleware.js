@@ -5,13 +5,11 @@ import { ErrorHelper } from './ErrorHelper.js';
 
 export const authMiddleware =  asyncHandler( async (req, res, next) => {
     let token = req.cookies.jwt;
-    console.log(token)
+    let decoded;
 
     if(!token){
         throw new ErrorHelper(`Unauthorized: can't access the page, you aren't login yet`, 401)
     }
-
-    let decoded;
 
     try {
         decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -23,7 +21,7 @@ export const authMiddleware =  asyncHandler( async (req, res, next) => {
     const currentUser = await User.findById(decoded.id);
 
     if(!currentUser){
-        throw new ErrorHelper(`Unauthorized: Invalid Uer Id`, 401)
+        throw new ErrorHelper(`Unauthorized: Invalid User Id`, 401)
     }
     req.user = currentUser;
     return next();
