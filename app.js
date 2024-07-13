@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import authRouter from './router/authRouter.js';
+import userRouter from './router/userRouter.js';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
 // Parent Router
 app.use('/api/v1/auth', authRouter);
 
+app.use('/api/v1/user', userRouter);
 
 app.use(notFound);
 app.use(errorHandler);
